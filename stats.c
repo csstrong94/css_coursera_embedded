@@ -242,6 +242,7 @@ void print_array(unsigned char* arr, unsigned int len) {
 		printf("%d ", arr[i]);
 		
 	}
+	
 	printf("]\n");
 }
 
