@@ -35,9 +35,9 @@ ifeq ($(PLATFORM),MSP432)
 		  ./main.c 
 
 
-	INCLUDES = -I/home/ecee/ese-coursera-course1/assessments/m2/include/CMSIS/ \
-		   -I/home/ecee/ese-coursera-course1/assessments/m2/include/msp432/ \
-		   -I/home/ecee/ese-coursera-course1/assessments/m2/include/common/ \
+	INCLUDES = -I../include/CMSIS/ \
+		   -I../include/msp432/ \
+		   -I../include/common/ \
 
 		
 
