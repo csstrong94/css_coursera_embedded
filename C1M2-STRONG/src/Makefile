@@ -10,15 +10,22 @@
 #*****************************************************************************
 
 #------------------------------------------------------------------------------
-# <Put a Description Here>
+# Makefile for module 2
 #
 # Use: make [TARGET] [PLATFORM-OVERRIDES]
 #
 # Build Targets:
-#      <Put a description of the supported targets here>
+#      <FILE>.i - generate .i file from .c file input
+#      <FILE>.o - generate object files from .c file input
+#      <FILE>.asm - generate assembly source file from .c file OR from .out (uses objdump) 
+#      	       file
+#      compile-all - compile and assemble, but do not link .c source files
+#      build - compile and link all .c source files. also build size report
+#      clean - remove all generated build files, object files, assembly files,
+#      	       dependency files, and preprocessor output files
 #
 # Platform Overrides:
-#      <Put a description of the supported Overrides here
+#      Override PLATFORM variable to either HOST (for host machine) or MSP432 
 #
 #------------------------------------------------------------------------------
 include sources.mk
