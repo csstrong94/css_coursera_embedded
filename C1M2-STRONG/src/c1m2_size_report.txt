@@ -1,0 +1,27 @@
+c1m2.out  :
+section                     size         addr
+.intvecs                   0x140          0x0
+.text                      0x8dc        0x140
+.text:Reset_Handler         0x6c        0xa1c
+.text:NMI_Handler           0x10        0xa88
+.text:HardFault_Handler     0x10        0xa98
+.text:Default_Handler       0x10        0xaa8
+.rodata                      0x8        0xab8
+.eh_frame                    0x4        0xac0
+.ARM.exidx                   0x8        0xac4
+.data                      0x438   0x20000000
+.jcr                         0x4   0x20000438
+.bss                        0x28   0x2000043c
+.ARM.attributes             0x30          0x0
+.comment                    0x2b          0x0
+.debug_line                0xde7          0x0
+.debug_info               0x3ad0          0x0
+.debug_abbrev              0xe80          0x0
+.debug_aranges             0x1f0          0x0
+.debug_ranges               0x60          0x0
+.debug_str                0x14ad          0x0
+.debug_frame               0x378          0x0
+.debug_loc                 0x614          0x0
+Total                     0x874b
+
+
