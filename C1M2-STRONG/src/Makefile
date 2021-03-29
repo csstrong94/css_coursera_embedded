@@ -39,7 +39,7 @@ PLATFORM = HOST
 
 BASE = c1m2
 TARGET = $(BASE).out
-SZREPORT = $(BASE)_size_report.txt
+SZREPORT = $(BASE)_size.report
 
 # Flags
 
@@ -111,6 +111,6 @@ compile-all: $(OBJS)
 .PHONY: clean
 clean:
 	$(info *** cleaning *** )
-	$(shell rm -f *.o *.asm *.map *.out *.i *.d)
+	$(shell rm -f *.o *.asm *.map *.out *.i *.d *.report)
 	@echo > /dev/null
 	$(info *** done ***)
