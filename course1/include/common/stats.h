@@ -24,6 +24,9 @@
 #ifndef __STATS_H__
 #define __STATS_H__
 
+#include <stdio.h>
+#define PRINTF(...) printf(__VA_ARGS__)
+
 
 /**
  * @brief Calculates min of array of integers
@@ -117,6 +120,8 @@ void sort_array(unsigned char* arr, unsigned int len);
  *
  * @return None
  */
+
+
 void print_array(unsigned char* arr, unsigned int len);
 
 

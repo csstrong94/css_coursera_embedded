@@ -26,14 +26,13 @@
  */
 
 
-
-#include <stdio.h>
 #include "stats.h"
 
 /* Size of the Data Set */
 #define SIZE (40)
 
-void main() {
+/**
+int main(void) {
 
   unsigned char test[SIZE] = { 34, 201, 190, 154,   8, 194,   2,   6,
                               114, 88,   45,  76, 123,  87,  25,  23,
@@ -41,9 +40,6 @@ void main() {
                               201,   6,  12,  60,   8,   2,   5,  67,
                                 7,  87, 250, 230,  99,   3, 100,  90};
 
-  /* Other Variable Declarations Go Here */
-  /* Statistics and Printing Functions Go Here */
-	
   printf("\nInput Array: ");
   print_array(test, SIZE);
   sort_array(test, SIZE);
@@ -52,11 +48,11 @@ void main() {
   printf("\n");
   print_statistics(test, SIZE);
  
-  
+  return 0;
 
 
 }
-
+*/
 
 /**
  * @brief Calculates min of array of integers
@@ -232,19 +228,26 @@ void sort_array(unsigned char* arr, unsigned int len) {
  * @return None
  */
 
-
+#ifdef VERBOSE
 void print_array(unsigned char* arr, unsigned int len) {
 
 	
-	printf("[");
+	PRINTF("[");
 	for(int i = 0; i < len; i++) {
 		
-		printf("%d ", arr[i]);
+		PRINTF("%d ", arr[i]);
 		
 	}
 	
-	printf("]\n");
+	PRINTF("]\n");
 }
+#else 
+void print_array(unsigned char* arr, unsigned int len) {
+	
+
+}
+
+#endif
 
 /**
  * @brief Pretty prints statistics of the array
