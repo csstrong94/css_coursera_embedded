@@ -10,7 +10,9 @@
 #*****************************************************************************
 
 # if no platform is defined here, default it to host
-ifndef ($(PLATFORM))
+
+PLATFORM =
+ifndef $(PLATFORM)
         $(warning *** No platform detected, defaulting to HOST ***)
 	PLATFORM = HOST
 
@@ -18,10 +20,13 @@ endif
 
 ifeq ($(PLATFORM),HOST)
         $(info *** Using HOST includes ***)
-	SOURCES = ./main.c \
-	  	./memory.c \
+	SOURCES = src/main.c \
+	  	src/memory.c \
+		src/data.c \
+		src/stats.c \
+		src/course1.c
 
-	INCLUDES = -I../include/common/
+	INCLUDES = -Iinclude/common/
 
 endif
 
@@ -35,9 +40,9 @@ ifeq ($(PLATFORM),MSP432)
 		  ./main.c 
 
 
-	INCLUDES = -I../include/CMSIS/ \
-		   -I../include/msp432/ \
-		   -I../include/common/ \
+	INCLUDES = -Iinclude/CMSIS/ \
+		   -Iinclude/msp432/ \
+		   -Iinclude/common/ \
 
 		
 

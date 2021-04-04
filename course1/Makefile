@@ -1,116 +1,85 @@
-#******************************************************************************
-# Copyright (C) 2017 by Alex Fosdick - University of Colorado
-#
-# Redistribution, modification or use of this software in source or binary
-# forms is permitted as long as the files maintain this copyright. Users are 
-# permitted to modify this and use it to learn about the field of embedded
-# software. Alex Fosdick and the University of Colorado are not liable for any
-# misuse of this material. 
-#
-#*****************************************************************************
-
-#------------------------------------------------------------------------------
-# Makefile for module 2
-#
-# Use: make [TARGET] [PLATFORM-OVERRIDES]
-#
-# Build Targets:
-#      <FILE>.i - generate .i file from .c file input
-#      <FILE>.o - generate object files from .c file input
-#      <FILE>.asm - generate assembly source file from .c file OR from .out (uses objdump) 
-#      	       file
-#      compile-all - compile and assemble, but do not link .c source files
-#      build - compile and link all .c source files. also build size report
-#      clean - remove all generated build files, object files, assembly files,
-#      	       dependency files, and preprocessor output files
-#
-# Platform Overrides:
-#      Override PLATFORM variable to either HOST (for host machine) or MSP432 
-#
-#------------------------------------------------------------------------------
 include sources.mk
 
-# Platform Overrides
-# HOST platform by default
-
-PLATFORM = HOST
-
-# Output names
-
-BASE = c1m2
+CPU = cortex-m4
+ARCH = armv7e-m
+SPECS = nosys.specs
+BASE = main
 TARGET = $(BASE).out
-SZREPORT = $(BASE)_size.report
+GRAPH = $(BASE).graph
+VERBOSITY = VERBOSE
+COURSE_FLAG = COURSE1
 
-# Flags
+LINKER_FILE = msp432p401r.lds
 
-CPPFLAGS = -E -o
-ODFLAGS = --disassemble
-SZFLAGS = -Ax 
-ifeq ($(PLATFORM),MSP432)
-        $(info *** Detected MSP432 platform override *** )
-	LINKER_FILE = ../msp432p401r.lds
-	CPU = cortex-m4
-	ARCH = armv7e-m
-	SPECS = nosys.specs
+ODFLAGS = -d -x -S -t
+SZFLAGS = -Ad
+NMFLAGS = --print-size --size-sort --radix=d
 
-	# Compiler Flags and Defines
+ifeq ($(PLATFORM), MSP432)
+
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-ld
-	OD = arm-none-eabi-objdump
 	SZ = arm-none-eabi-size
+	NM = arm-none-eabi-nm
+	OD = arm-none-eabi-objdump
+	CFLAGS = -mcpu=$(CPU) -mthumb -march=$(ARCH) -mfloat-abi=hard \
+ 		 -mfpu=fpv4-sp-d16 --specs=$(SPECS) $(INCLUDES) -Wall -Werror -g -O0 -std=c99 \
+		 -fverbose-asm
+ 
 	LDFLAGS = -Wl,-Map=$(BASE).map -T $(LINKER_FILE)
-	CFLAGS = -D$(PLATFORM) -mcpu=$(CPU) -mthumb -march=$(ARCH) -mfloat-abi=hard \
-		 -mfpu=fpv4-sp-d16 --specs=$(SPECS) -Wall -Werror -g -O0 -std=c99
+else
 
-
-endif
-
-ifeq ($(PLATFORM),HOST)
-        $(info *** Detected HOST platform ***)
 	CC = gcc
-	OD = objdump
 	SZ = size
+	NM = nm
+	OD = objdump
+	CFLAGS = $(INCLUDES) -D$(PLATFORM) -D$(VERBOSITY) -Wall -g -O0 -std=c99 \
+		 -D$(COURSE_FLAG)
 	LDFLAGS = -Wl,-Map=$(BASE).map
-	CFLAGS= -D$(PLATFORM) -Wall -Werror -g -O0 -std=c99
-
 endif
+
 
 OBJS = $(SOURCES:.c=.o)
 ASMS = $(SOURCES:.c=.asm)
-PPS = $(SOURCES:.c=.i)
-MAPS = $(SOURCES:.c=.map)
-
-
-
-%.i : %.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(CPPFLAGS) $@ $< 
+NMREPS = $(OBJS:.o=.nm_report)
 
 %.o : %.c
-	$(CC) $(INCLUDES) -MD -c $< $(CFLAGS) -o $@
+	$(CC) $(CFLAGS) -c $< -o $@	
+	$(OD) $(ODFLAGS) $@ > $@.obj_report
 
 %.asm : %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -S $< -o $@
+	$(CC) $(CFLAGS) -S $< -o $@
 
-%.asm : %.out
+%.i : $(SOURCES)
+	$(CC) $(CFLAGS) -E $< -o $@ 
 
-	$(OD) $(ODFLAGS) $< > $@
+%.nm_report : %.o
+	$(NM) $(NMFLAGS) $< > $@
+
+
+.PHONY: asm
+asm: $(ASMS)
+
+.PHONY: compile
+compile: $(OBJS) $(NMREPS)
 
 
 .PHONY: build
-build : $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $(TARGET)
-	$(SZ) $(TARGET) $(SZFLAGS) > $(SZREPORT)
+build: $(TARGET)
+
+$(TARGET) : $(SOURCES)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+	$(SZ) $(SZFLAGS) $@ > $(BASE).report
+	$(NM) $(NMFLAGS) $@ > $(BASE).nm_report
+	$(OD) $(ODFLAGS) $@ > $@.obj_report
 
 
-
-.PHONY: compile-all
-compile-all: $(OBJS)
-
+.PHONY: build-all
+build-all: $(ASMS) $(OBJS) $(TARGET)
 
 
 .PHONY: clean
 clean:
 	$(info *** cleaning *** )
-	$(shell rm -f *.o *.asm *.map *.out *.i *.d *.report)
-	@echo > /dev/null
+	rm -f *.o *.asm *.map *.out *.i *.d *.report *.nm_report *.obj_report
 	$(info *** done ***)
