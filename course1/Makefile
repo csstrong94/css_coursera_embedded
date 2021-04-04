@@ -23,8 +23,8 @@ ifeq ($(PLATFORM), MSP432)
 	NM = arm-none-eabi-nm
 	OD = arm-none-eabi-objdump
 	CFLAGS = -mcpu=$(CPU) -mthumb -march=$(ARCH) -mfloat-abi=hard \
- 		 -mfpu=fpv4-sp-d16 --specs=$(SPECS) $(INCLUDES) -Wall -Werror -g -O0 -std=c99 \
-		 -fverbose-asm
+ 		 -mfpu=fpv4-sp-d16 --specs=$(SPECS) $(INCLUDES) -Wall -g -O0 -std=c99 \
+		 -D$(PLATFORM) -D$(VERBOSITY) -D$(COURSE_FLAG) -fverbose-asm
  
 	LDFLAGS = -Wl,-Map=$(BASE).map -T $(LINKER_FILE)
 else
@@ -81,6 +81,6 @@ build-all: $(ASMS) $(OBJS) $(TARGET)
 .PHONY: clean
 clean:
 	$(info *** cleaning *** )
-
+	rm -f *.o *.asm *.map *.out *.i *.d *.report *.nm_report *.obj_report
 	cd src; rm -f *.o *.asm *.map *.out *.i *.d *.report *.nm_report *.obj_report
 	$(info *** done ***)
