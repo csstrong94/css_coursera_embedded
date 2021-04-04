@@ -81,5 +81,6 @@ build-all: $(ASMS) $(OBJS) $(TARGET)
 .PHONY: clean
 clean:
 	$(info *** cleaning *** )
-	rm -f *.o *.asm *.map *.out *.i *.d *.report *.nm_report *.obj_report
+
+	cd src; rm -f *.o *.asm *.map *.out *.i *.d *.report *.nm_report *.obj_report
 	$(info *** done ***)
