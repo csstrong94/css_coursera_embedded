@@ -21,6 +21,7 @@
  *
  */
 #include "memory.h"
+#include <stdint.h>
 
 /***********************************************************
  Function Definitions
@@ -48,3 +49,125 @@ void clear_all(char * ptr, unsigned int size){
   set_all(ptr, 0, size);
 }
 
+uint8_t* my_memmove(uint8_t* src, uint8_t* dst, size_t length) {
+
+	/* first case is copying in reverse 
+	 * [----src----]
+	 * 	    [----dst----]
+	 * 
+	 * we don't want to overwrite our source
+	 * 
+	 *
+	 * */
+
+	if (dst > src && dst - src < length ) {
+		for (uint8_t i = length - 1; i >= 0; i++) {
+			*dst = *src;
+			src++;
+			dst++;
+
+		}
+
+		return dst;
+
+	}
+
+
+	/* second case is copying forwards
+	 *           [----src----]
+	 * [----dst----]
+	 *
+	 * we don't want to overwrite our source
+	 *
+	 *
+	 */
+	
+	if (dst < src && dst - src < length) {
+		for (uint8_t i = 0; i < length; i++) {
+			*dst = *src;
+			src++;
+			dst++;
+		}
+
+		return dst;
+		
+	}
+
+
+	//otherwise just a regular memcpy (no overlap)
+	
+	my_memcopy(src, dst, length);
+
+	return dst;
+}
+
+
+uint8_t* my_memcopy(uint8_t* src, uint8_t* dst, size_t length) {
+	
+	unsigned int i;
+	for (i = 0; i < length; i++) {
+		*dst = *src;
+		dst++;
+		src++;	
+
+	}
+	
+	return dst;
+
+}
+
+
+uint8_t* my_memset(uint8_t* src, size_t length, uint8_t value) {
+	
+	uint8_t* k = src;
+	for (uint8_t i = 0; i < length; i++) {
+		*k = value;
+		k++;
+		
+	}
+	
+	return src;
+}
+
+uint8_t* my_memzero(uint8_t* src, size_t length) {
+
+	uint8_t* k = src;
+	for (uint8_t i = 0; i < length; i++) {
+		*k = 0;
+		k++;
+		
+	}
+
+	return src;
+
+}
+
+
+uint8_t* my_reverse(uint8_t* src, size_t length) {
+	
+	uint8_t tmp = 0;
+	uint8_t* src_l = src + length - 1;
+	uint8_t* k = src;
+	while (k < src_l) {
+		tmp = *k;
+		*k = *src_l;
+		*src_l = tmp;
+		k++;
+		src_l--;
+		
+
+	}
+	
+
+	return src;
+
+}
+
+
+
+int32_t* reserve_words(size_t length) 
+{
+	int32_t* reserved = malloc(length * sizeof(int32_t));
+
+
+}
