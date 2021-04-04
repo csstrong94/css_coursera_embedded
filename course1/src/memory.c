@@ -22,7 +22,7 @@
  */
 #include "memory.h"
 #include <stdint.h>
-
+#include <stdlib.h>
 /***********************************************************
  Function Definitions
 ***********************************************************/
@@ -50,6 +50,13 @@ void clear_all(char * ptr, unsigned int size){
 }
 
 uint8_t* my_memmove(uint8_t* src, uint8_t* dst, size_t length) {
+	
+	
+	uint8_t* k = src;
+	uint8_t* j = dst;
+	if (src == dst || length == 0) {
+		return dst; 
+	}
 
 	/* first case is copying in reverse 
 	 * [----src----]
@@ -59,12 +66,11 @@ uint8_t* my_memmove(uint8_t* src, uint8_t* dst, size_t length) {
 	 * 
 	 *
 	 * */
-
 	if (dst > src && dst - src < length ) {
-		for (uint8_t i = length - 1; i >= 0; i++) {
-			*dst = *src;
-			src++;
-			dst++;
+		j += length;
+		k += length;
+		while (length--) {
+			*--j = *--k;
 
 		}
 
@@ -82,11 +88,9 @@ uint8_t* my_memmove(uint8_t* src, uint8_t* dst, size_t length) {
 	 *
 	 */
 	
-	if (dst < src && dst - src < length) {
+	if (src > dst && src - dst < length) {
 		for (uint8_t i = 0; i < length; i++) {
-			*dst = *src;
-			src++;
-			dst++;
+			*j++ = *k++;
 		}
 
 		return dst;
@@ -96,7 +100,7 @@ uint8_t* my_memmove(uint8_t* src, uint8_t* dst, size_t length) {
 
 	//otherwise just a regular memcpy (no overlap)
 	
-	my_memcopy(src, dst, length);
+	my_memcopy(k, j, length);
 
 	return dst;
 }
@@ -105,10 +109,11 @@ uint8_t* my_memmove(uint8_t* src, uint8_t* dst, size_t length) {
 uint8_t* my_memcopy(uint8_t* src, uint8_t* dst, size_t length) {
 	
 	unsigned int i;
+	uint8_t* k = src;
 	for (i = 0; i < length; i++) {
-		*dst = *src;
+		*dst = *k;
 		dst++;
-		src++;	
+		k++;	
 
 	}
 	
@@ -165,9 +170,17 @@ uint8_t* my_reverse(uint8_t* src, size_t length) {
 
 
 
-int32_t* reserve_words(size_t length) 
-{
-	int32_t* reserved = malloc(length * sizeof(int32_t));
+int32_t* reserve_words(size_t length) {
+	
+	int32_t* reserved = calloc(length, sizeof *reserved);
+	
+	return reserved;
 
+}
+
+
+void free_words(int32_t* src) {
+	
+	free(src);
 
 }
