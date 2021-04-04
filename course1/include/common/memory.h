@@ -187,6 +187,24 @@ uint8_t* my_memzero(uint8_t* src, size_t length);
 
 uint8_t* my_reverse(uint8_t* src, size_t length);
 
+
+
+/**
+ * @brief dynamically allocate memory for 32bit word
+ * 
+ * Dynamically allocate memory given a length
+ *
+ * @param length length of memory block
+ * 
+ * @return int32_t*
+ *
+ */
+
+int32_t* reserve_words(size_t length);
+
+
+
+
 /**
  * @brief free dynamically allocated memory given a ptr
  * 
